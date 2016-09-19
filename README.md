@@ -20,7 +20,7 @@ The Minimum Viable Product will include the following features:
 
 ### Wireframes
 
-<img src="https://github.com/msantam2/chess/blob/master/images/chess.png" width="400" height="600" />
+<img src="https://github.com/msantam2/chess/blob/master/images/chess.png" width="600" height="400" />
 
 ### Technologies
 
