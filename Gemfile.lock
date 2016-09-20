@@ -1,0 +1,17 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    byebug (9.0.5)
+    colorize (0.8.1)
+    io-console (0.4.6)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  byebug
+  colorize
+  io-console
+
+BUNDLED WITH
+   1.12.5

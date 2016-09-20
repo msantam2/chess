@@ -20,7 +20,7 @@ The Minimum Viable Product will include the following features:
 
 ### Wireframes
 
-<img src="https://github.com/msantam2/chess/blob/master/images/chess.png" width="600" height="400" />
+<img src="https://github.com/msantam2/chess/blob/master/images/chess.png" width="550" height="400" />
 
 ### Technologies
 
@@ -57,3 +57,5 @@ A challenge of building this game will be incorporating both the computer's AI a
 - Castling
 
 Finally, allow to the user to play again when the game has ended.
+
+(Later - Explain in README how someone would go about downloading and running this)
