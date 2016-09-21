@@ -8,9 +8,9 @@ class Game
   end
 
   def play
-    until game_won
-      display.render
-    end
+    # until game_won
+      @display.render
+    # end
   end
 
   def game_won

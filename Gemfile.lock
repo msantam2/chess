@@ -4,6 +4,7 @@ GEM
     byebug (9.0.5)
     colorize (0.8.1)
     io-console (0.4.6)
+    require_all (1.3.3)
 
 PLATFORMS
   ruby
@@ -12,6 +13,7 @@ DEPENDENCIES
   byebug
   colorize
   io-console
+  require_all
 
 BUNDLED WITH
    1.12.5
