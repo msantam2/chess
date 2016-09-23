@@ -1,22 +1,29 @@
 require 'colorize'
+require_relative './cursorable'
+require 'byebug'
 
 class Display
+  include Cursorable
+
   PIECE_UNICODES = {
     king: " \u265A ",
     queen: " \u265B ",
-    bishop: " \u265C ",
-    knight: " \u265D ",
-    rook: " \u265E ",
+    rook: " \u265C ",
+    bishop: " \u265D ",
+    knight: " \u265E ",
     pawn: " \u265F ",
     nullpiece: '   '
   }
 
-
+  attr_reader :board, :cursor_pos, :selected
   def initialize(board)
     @board = board
+    @cursor_pos = [0, 0]
+    @selected = false
   end
 
   def render
+    system("clear")
     render_letters_row
 
     board.each_with_index do |row, row_idx|
@@ -32,9 +39,10 @@ class Display
 
     switch = row_idx.even? ? true : false
     row.each_with_index do |piece, piece_idx|
-      background = switch ? :magenta : :cyan
-      piece_str = piece.is_a?(NullPiece) ? PIECE_UNICODES[:nullpiece] : PIECE_UNICODES[piece.type]
-      color = piece.is_a?(NullPiece) ? background : piece.color
+      background = :green if @cursor_pos == [row_idx, piece_idx]
+      background ||= switch ? :magenta : :cyan
+
+      piece_str, color = piece.is_a?(NullPiece) ? [PIECE_UNICODES[:nullpiece], background] : [PIECE_UNICODES[piece.type], piece.color]
 
       print piece_str.colorize(color: color, background: background)
 

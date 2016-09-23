@@ -53,7 +53,7 @@ class Board
     'rook'
   ]
 
-  def on_board?(pos)
+  def in_bounds?(pos)
     pos.all? { |coord| coord.between?(0, 7)}
   end
 
