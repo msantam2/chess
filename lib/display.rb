@@ -23,7 +23,7 @@ class Display
   end
 
   def render
-    system("clear")
+    system('clear')
     render_letters_row
 
     board.each_with_index do |row, row_idx|
@@ -39,10 +39,11 @@ class Display
 
     switch = row_idx.even? ? true : false
     row.each_with_index do |piece, piece_idx|
-      background = :green if @cursor_pos == [row_idx, piece_idx]
+      background = :green if @board.starting_pos == [row_idx, piece_idx]
+      background = :light_blue if @cursor_pos == [row_idx, piece_idx]
       background ||= switch ? :magenta : :cyan
 
-      piece_str, color = piece.is_a?(NullPiece) ? [PIECE_UNICODES[:nullpiece], background] : [PIECE_UNICODES[piece.type], piece.color]
+      piece_str, color = [PIECE_UNICODES[piece.type], piece.color || background]
 
       print piece_str.colorize(color: color, background: background)
 

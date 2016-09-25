@@ -12,9 +12,11 @@ class Board
   end
 
   attr_reader :grid
+  attr_accessor :starting_pos
 
   def initialize
     @grid = Board.create_grid
+    @starting_pos = nil
     populate_grid
   end
 
@@ -55,6 +57,14 @@ class Board
 
   def in_bounds?(pos)
     pos.all? { |coord| coord.between?(0, 7)}
+  end
+
+  def move_piece(starting_pos, ending_pos)
+    
+  end
+
+  def flatten
+    @grid.flatten
   end
 
   def [](pos)

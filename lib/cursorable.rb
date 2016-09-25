@@ -21,7 +21,7 @@ module Cursorable
     "\e[D" => :left,
     "\177" => :backspace,
     "\004" => :delete,
-    "\u0003" => :ctrl_c,
+    "\u0003" => :ctrl_c
   }
 
   MOVES = {
@@ -45,6 +45,8 @@ module Cursorable
     when :left, :right, :up, :down
       update_pos(MOVES[key])
       nil
+    when :escape, :backspace, :delete
+      'start move over'
     else
       puts key
     end
