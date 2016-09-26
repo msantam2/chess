@@ -2,6 +2,17 @@ require 'require_all'
 require_all './pieces'
 
 class Board
+  ROYALS_ROW = [
+    'rook',
+    'knight',
+    'bishop',
+    'king',
+    'queen',
+    'bishop',
+    'knight',
+    'rook'
+  ]
+
   def self.create_grid
     grid = Array.new(8) { Array.new(8) }
     grid.each_with_index do |row, row_idx|
@@ -12,11 +23,11 @@ class Board
   end
 
   attr_reader :grid
-  attr_accessor :starting_pos
+  attr_accessor :start_pos
 
   def initialize
     @grid = Board.create_grid
-    @starting_pos = nil
+    @start_pos = nil
     populate_grid
   end
 
@@ -44,23 +55,32 @@ class Board
     end
   end
 
-  ROYALS_ROW = [
-    'rook',
-    'knight',
-    'bishop',
-    'king',
-    'queen',
-    'bishop',
-    'knight',
-    'rook'
-  ]
-
   def in_bounds?(pos)
     pos.all? { |coord| coord.between?(0, 7)}
   end
 
-  def move_piece(starting_pos, ending_pos)
-    
+  def space_open?(current_piece, new_pos)
+    current_piece.color != self[new_pos].color
+  end
+
+  def valid_start_pos?(pos, player_color)
+    # pos may be nil because of cursorable.rb:47, moving will return nil
+    return false if pos.nil?
+    piece = self[pos]
+    piece.color == player_color &&
+    !piece.moves(self, pos).empty?
+  end
+
+  def valid_end_pos?(pos)
+    return false if pos.nil?
+    piece = self[@start_pos]
+    piece.moves(self, @start_pos).include?(pos)
+  end
+
+  def move_piece(start_pos, end_pos)
+    piece = self[start_pos]
+    self[start_pos] = NullPiece.instance
+    self[end_pos] = piece
   end
 
   def flatten

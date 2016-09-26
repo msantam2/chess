@@ -23,38 +23,48 @@ class Game
   end
 
   def play_turn
-    starting_pos = get_starting_pos
-    ending_pos = get_ending_pos
-    move_piece(starting_pos, ending_pos)
+    start_pos = get_start_pos
+    end_pos = get_end_pos
+    move_piece(start_pos, end_pos)
   end
 
-  def get_starting_pos
-    starting_pos = nil
+  def get_start_pos
+    start_pos = nil
 
-    until valid_starting_pos?(starting_pos)
+    until valid_start_pos?(start_pos)
       puts "It's #{@current_player.name}'s turn! (#{@current_player.color})"
-      starting_pos = @current_player.get_move(@display)
+      start_pos = @current_player.get_move(@display)
+      # board instance variable start_pos for display to render green
+      @board.start_pos = start_pos
       @display.render
     end
 
-    puts "you have selected the #{@board[starting_pos].color} #{@board[starting_pos].type}!"
-    @board.starting_pos = starting_pos
+    puts "you have selected the #{@board[start_pos].type}!"
+    start_pos
   end
 
-  def valid_starting_pos?(pos)
-    # pos may be nil because of cursorable.rb:47, moving will return nil
-    return false if pos.nil?
-    piece = @board[pos]
-    piece.color == @current_player.color
-    # && @board.has_available_moves(piece)
+  def valid_start_pos?(pos)
+    @board.valid_start_pos?(pos, @current_player.color)
   end
 
-  def get_ending_pos
+  def get_end_pos
+    end_pos = nil
 
+    until valid_end_pos?(end_pos)
+      puts "choose where you would like to move your #{@board[@board.start_pos].type}, #{@current_player.name}."
+      end_pos = @current_player.get_move(@display)
+      @display.render
+    end
+
+    end_pos
   end
 
-  def move_piece(starting_pos, ending_pos)
-    @board.move_piece(starting_pos, ending_pos)
+  def valid_end_pos?(pos)
+    @board.valid_end_pos?(pos)
+  end
+
+  def move_piece(start_pos, end_pos)
+    @board.move_piece(start_pos, end_pos)
   end
 
   def choose_players
