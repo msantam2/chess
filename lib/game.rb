@@ -66,6 +66,7 @@ class Game
       @display.render
     end
 
+    @board.start_pos = nil 
     end_pos
   end
 

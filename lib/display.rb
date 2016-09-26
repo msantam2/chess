@@ -26,7 +26,7 @@ class Display
     system('clear')
     render_letters_row
 
-    board.each_with_index do |row, row_idx|
+    board.grid.each_with_index do |row, row_idx|
       render_row(row, row_idx)
       puts
     end
@@ -60,11 +60,5 @@ class Display
     end
     print '  '
     puts
-  end
-
-  private
-
-  def board
-    @board.grid
   end
 end

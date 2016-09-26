@@ -93,8 +93,7 @@ class Board
     # pos may be nil because of cursorable.rb:47, moving will return nil
     return false if pos.nil?
     piece = self[pos]
-    piece.color == player_color &&
-    !piece.moves(self, pos).empty?
+    piece.color == player_color && !piece.moves(self, pos).empty?
   end
 
   def valid_end_pos?(pos)
