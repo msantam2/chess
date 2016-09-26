@@ -10,6 +10,7 @@ class Game
     @display = Display.new(@board)
     choose_players
     @current_player = [@player1, @player2].sample
+    @first_move = true
   end
 
   def play
@@ -29,9 +30,12 @@ class Game
   end
 
   def get_start_pos
-    puts "#{@player1.name} will be facing #{@player2.name}! Let's go!"
-    start_pos = nil
+    if @first_move
+      declare_first_player
+      @first_move = false
+    end
 
+    start_pos = nil
     until valid_start_pos?(start_pos)
       puts "It's #{@current_player.name}'s turn! (#{@current_player.color})"
       start_pos = @current_player.get_move(@display)
@@ -42,6 +46,11 @@ class Game
 
     puts "you have selected the #{@board[start_pos].type}!"
     start_pos
+  end
+
+  def declare_first_player
+    puts "#{@player1.name} will be facing #{@player2.name}! Let's go!"
+    puts "#{@current_player.name} will be going first! Godspeed."
   end
 
   def valid_start_pos?(pos)
