@@ -59,8 +59,34 @@ class Board
     pos.all? { |coord| coord.between?(0, 7)}
   end
 
-  def space_open?(current_piece, new_pos)
-    current_piece.color != self[new_pos].color
+  def space_available?(current_piece, new_pos)
+    space_empty?(new_pos) || space_occupied_by_opponent?(current_piece, new_pos)
+  end
+
+  def space_empty?(pos)
+    self[pos].type == :nullpiece
+  end
+
+  def space_occupied_by_opponent?(current_piece, new_pos)
+    other_piece = self[new_pos]
+    (current_piece.color == :black && other_piece.color == :white) ||
+    (current_piece.color == :white && other_piece.color == :black)
+  end
+
+  # to check for valid pawn move
+  def diagonal?(start_pos, end_pos)
+    ((start_pos[0] - end_pos[0]).abs == 1) && ((start_pos[1] - end_pos[1]).abs == 1) && self.space_occupied_by_opponent?(self[start_pos], end_pos)
+  end
+
+  # to check for valid pawn move
+  def two_ahead?(start_pos, end_pos)
+    one_space_ahead = [((start_pos[0] + end_pos[0]) / 2), start_pos[1]]
+    (start_pos[0] - end_pos[0]).abs == 2 && self.space_empty?(end_pos) && self.space_empty?(one_space_ahead)
+  end
+
+  # to check for valid pawn move
+  def one_ahead?(start_pos, end_pos)
+    (start_pos[0] - end_pos[0]).abs == 1 && (start_pos[1] - end_pos[1]).abs == 0 && self.space_empty?(end_pos)
   end
 
   def valid_start_pos?(pos, player_color)

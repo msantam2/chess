@@ -11,7 +11,6 @@ module Stepable
   }
 
   def moves(board, start_pos)
-    piece = board[start_pos]
     all_moves = []
 
     move_directions.each do |move_direction|
@@ -26,13 +25,13 @@ module Stepable
         new_pos[0] += delta[0]; new_pos[1] += delta[1]
       end
 
-      all_moves << new_pos if valid_move?(board, piece, new_pos)
+      all_moves << new_pos if valid_move?(board, new_pos)
     end
 
-    all_moves
+    self.type == :pawn ? pawn_moves(start_pos, board, all_moves) : all_moves
   end
 
-  def valid_move?(board, current_piece, new_pos)
-    board.in_bounds?(new_pos) && board.space_open?(current_piece, new_pos)
+  def valid_move?(board, new_pos)
+    board.in_bounds?(new_pos) && board.space_available?(self, new_pos)
   end
 end

@@ -29,6 +29,7 @@ class Game
   end
 
   def get_start_pos
+    puts "#{@player1.name} will be facing #{@player2.name}! Let's go!"
     start_pos = nil
 
     until valid_start_pos?(start_pos)
@@ -67,8 +68,13 @@ class Game
     @board.move_piece(start_pos, end_pos)
   end
 
+  def give_greeting
+    puts "Welcome to Chess!"
+    puts "Type '1' for a human vs. human game, '2' for human vs. computer, or '3' to watch 2 computers duke it out! Then hit enter:"
+  end
+
   def choose_players
-    puts "Welcome to Chess! Type '1' for a human vs. human game, '2' for human vs. computer, or '3' to watch 2 computers duke it out! Then hit enter:"
+    give_greeting
 
     player_choice = gets.chomp.to_i
     case player_choice
@@ -79,17 +85,14 @@ class Game
         player2_name = gets.chomp
         @player1 = HumanPlayer.new(player1_name, :black)
         @player2 = HumanPlayer.new(player2_name, :white)
-        puts "#{player1_name} will be facing #{player2_name}! Let's go!"
       when 2
         print 'type your name:   '
         player_name = gets.chomp
         @player1 = HumanPlayer.new(player_name, :black)
         @player2 = ComputerPlayer.new('Cathy the Computer', :white)
-        puts 'you will be facing Cathy the Computer!'
       when 3
         @player1 = ComputerPlayer.new('MacBook Miller', :black)
         @player2 = ComputerPlayer.new('PC Jones', :white)
-        puts 'you will watch MacBook Miller duke it out with PC Jones!'
     end
   end
 
@@ -104,9 +107,10 @@ class Game
   end
 
   def declare_winner
-    puts "#{switch_players}.name has won the game! Would you like to play again? (y or n)"
+    @display.render
+    puts "#{switch_players.name} has won the game! Would you like to play again? (y or n)"
     answer = gets.chomp
-    answer == 'y' ? self.play : nil
+    answer == 'y' ? Game.new.play : nil
   end
 end
 
