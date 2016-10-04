@@ -1,8 +1,7 @@
-require './board'
-require './display'
-require './human_player'
-require './computer_player'
-require 'byebug'
+require_relative 'board'
+require_relative 'display'
+require_relative 'human_player'
+require_relative 'computer_player'
 
 class Game
   def initialize
@@ -50,7 +49,7 @@ class Game
 
   def declare_first_player
     puts "#{@player1.name} will be facing #{@player2.name}! Let's go!"
-    puts "#{@current_player.name} will be going first! Godspeed."
+    puts "#{@current_player.name} will be going first! Good luck Grandmasters!"
   end
 
   def valid_start_pos?(pos)

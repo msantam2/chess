@@ -1,4 +1,4 @@
-require './player'
+require_relative 'player'
 
 class HumanPlayer < Player
   def get_move(display)

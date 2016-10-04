@@ -1,5 +1,5 @@
 require 'require_all'
-require_all './pieces'
+require_all 'pieces'
 
 class Board
   ROYALS_ROW = [

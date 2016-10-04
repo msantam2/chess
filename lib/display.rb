@@ -1,6 +1,5 @@
 require 'colorize'
-require_relative './cursorable'
-require 'byebug'
+require_relative 'cursorable'
 
 class Display
   include Cursorable
@@ -40,7 +39,7 @@ class Display
     switch = row_idx.even? ? true : false
     row.each_with_index do |piece, piece_idx|
       background = :green if @board.start_pos == [row_idx, piece_idx]
-      background = :light_blue if @cursor_pos == [row_idx, piece_idx]
+      background = :yellow if @cursor_pos == [row_idx, piece_idx]
       background ||= switch ? :magenta : :cyan
 
       piece_str, color = [PIECE_UNICODES[piece.type], piece.color || background]

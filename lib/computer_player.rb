@@ -1,6 +1,6 @@
-require './player'
+require_relative 'player'
 require 'require_all'
-require_all './pieces'
+require_all 'pieces'
 
 class ComputerPlayer < Player
   def get_move(display)
@@ -12,7 +12,7 @@ class ComputerPlayer < Player
   end
 
   def select_start_pos(board)
-    sleep(1)
+    # sleep(1)
     possible_positions = []
 
     board.grid.each_with_index do |row, row_idx|
@@ -28,7 +28,7 @@ class ComputerPlayer < Player
   end
 
   def select_end_pos(board)
-    sleep(1)
+    # sleep(1)
     piece = board[board.start_pos]
     piece.moves(board, board.start_pos).sample
   end
