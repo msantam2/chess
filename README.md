@@ -2,7 +2,7 @@
 
 Enjoy a fun and elegant way to play chess directly from the comfort of your own terminal! Play your friend, play the computer, or just sit back, relax and watch two computers battle it out!
 
-<img src="https://github.com/msantam2/chess/blob/master/images/chess_gameplay.gif" width="540" height="440" />
+<img src="https://github.com/msantam2/chess/blob/master/images/chess_gameplay.gif" width="555" height="520" />
 
 __________
 
