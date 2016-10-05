@@ -16,8 +16,8 @@ class Board
   def self.create_grid
     grid = Array.new(8) { Array.new(8) }
     grid.each_with_index do |row, row_idx|
-      row.each_with_index do |column, column_idx|
-        grid[row_idx][column_idx] = NullPiece.instance
+      row.each_with_index do |col, col_idx|
+        grid[row_idx][col_idx] = NullPiece.instance
       end
     end
   end
@@ -96,6 +96,53 @@ class Board
     piece.color == player_color && !piece.moves(self, pos).empty?
   end
 
+  def in_check?(player)
+    king_pos = king_pos(player)
+    opponent = opponent(player)
+    opponent_pieces = opponent_pieces(opponent)
+    opponent_moves(opponent_pieces).include?(king_pos)
+  end
+
+  def opponent(current_player)
+    current_player.color == :black ? :white : :black
+  end
+
+  def opponent_pieces(opponent)
+    pieces_with_positions = {}
+
+    @grid.each_with_index.each do |row, row_idx|
+      row.each_index.each do |col_idx|
+        pos = [row_idx, col_idx]
+        if self[pos].color == opponent
+          pieces_with_positions[self[pos]] = pos
+        end
+      end
+    end
+
+    pieces_with_positions
+  end
+
+  def opponent_moves(opponent_pieces)
+    moves = []
+
+    opponent_pieces.each do |piece, pos|
+      moves += piece.moves(self, pos)
+    end
+
+    moves
+  end
+
+  def king_pos(player)
+    @grid.each_with_index do |row, row_idx|
+      row.each_index do |col_idx|
+        pos = [row_idx, col_idx]
+        if self[pos].type == :king && self[pos].color == player.color
+          return pos
+        end
+      end
+    end
+  end
+
   def valid_end_pos?(pos)
     return false if pos.nil?
     piece = self[@start_pos]
@@ -104,8 +151,13 @@ class Board
 
   def move_piece(start_pos, end_pos)
     piece = self[start_pos]
+    end_piece = self[end_pos]
+
     self[start_pos] = NullPiece.instance
     self[end_pos] = piece
+
+    # returning this value to Game#move_piece in order to annouce what piece has been captured 
+    end_piece
   end
 
   def flatten

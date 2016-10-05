@@ -2,7 +2,7 @@ require_relative 'board'
 require_relative 'display'
 require_relative 'human_player'
 require_relative 'computer_player'
-
+require 'byebug'
 class Game
   def initialize
     @board = Board.new
@@ -10,11 +10,13 @@ class Game
     choose_players
     @current_player = [@player1, @player2].sample
     @first_move = true
+    @capture = nil
   end
 
   def play
     until game_won
       @display.render
+      declare_capture if @capture
       play_turn
       switch_players
     end
@@ -50,6 +52,7 @@ class Game
   def declare_first_player
     puts "#{@player1.name} will be facing #{@player2.name}! Let's go!"
     puts "#{@current_player.name} will be going first! Good luck Grandmasters!"
+    sleep(2)
   end
 
   def valid_start_pos?(pos)
@@ -74,7 +77,18 @@ class Game
   end
 
   def move_piece(start_pos, end_pos)
-    @board.move_piece(start_pos, end_pos)
+    capture = @board.move_piece(start_pos, end_pos)
+
+    if capture.type != :nullpiece
+      @capture = capture
+    end
+  end
+
+  def declare_capture
+    puts "#{other_player.name} has captured #{@current_player.name}'s #{@capture.type}!"
+    sleep(2)
+
+    @capture = nil
   end
 
   def give_greeting
@@ -109,6 +123,10 @@ class Game
     @current_player = @current_player == @player1 ? @player2 : @player1
   end
 
+  def other_player
+    @current_player == @player1 ? @player2 : @player1
+  end
+
   def game_won
     @board.flatten.none? do |piece|
       piece.type == :king && piece.color == @current_player.color
@@ -117,7 +135,7 @@ class Game
 
   def declare_winner
     @display.render
-    puts "#{switch_players.name} has won the game! Would you like to play again? (y or n)"
+    puts "#{other_player.name} has won the game! Would you like to play again? (y or n)"
     answer = gets.chomp
     answer == 'y' ? Game.new.play : nil
   end
