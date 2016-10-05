@@ -2,7 +2,7 @@ require_relative 'board'
 require_relative 'display'
 require_relative 'human_player'
 require_relative 'computer_player'
-require 'byebug'
+
 class Game
   def initialize
     @board = Board.new
@@ -13,9 +13,38 @@ class Game
     @capture = nil
   end
 
+  def choose_players
+    give_greeting
+
+    player_choice = gets.chomp.to_i
+    case player_choice
+      when 1
+        print 'type a name for player1:   '
+        player1_name = gets.chomp
+        print 'type a name for player2:   '
+        player2_name = gets.chomp
+        @player1 = HumanPlayer.new(player1_name, :black)
+        @player2 = HumanPlayer.new(player2_name, :white)
+      when 2
+        print 'type your name:   '
+        player_name = gets.chomp
+        @player1 = HumanPlayer.new(player_name, :black)
+        @player2 = ComputerPlayer.new('Compie', :white)
+      when 3
+        @player1 = ComputerPlayer.new('MacBook Miller', :black)
+        @player2 = ComputerPlayer.new('PC Jones', :white)
+    end
+  end
+
+  def give_greeting
+    puts "Welcome to Chess!"
+    puts "Type '1' for a human vs. human game, '2' for human vs. computer, or '3' to watch 2 computers duke it out! Then hit enter:"
+  end
+
   def play
     until game_won
       @display.render
+      declare_first_player if @first_move
       declare_capture if @capture
       play_turn
       switch_players
@@ -31,28 +60,41 @@ class Game
   end
 
   def get_start_pos
-    if @first_move
-      declare_first_player
-      @first_move = false
-    end
-
     start_pos = nil
     until valid_start_pos?(start_pos)
-      puts "It's #{@current_player.name}'s turn! (#{@current_player.color})"
+      declare_current_player
+      declare_check_status
       start_pos = @current_player.get_move(@display)
-      # board instance variable start_pos for display to render green
+
+      # board ivar 'start_pos' for display to render green background when the piece has been selected
       @board.start_pos = start_pos
       @display.render
     end
 
-    puts "you have selected the #{@board[start_pos].type}!"
+    declare_selected_piece
     start_pos
   end
 
   def declare_first_player
     puts "#{@player1.name} will be facing #{@player2.name}! Let's go!"
     puts "#{@current_player.name} will be going first! Good luck Grandmasters!"
+
+    @first_move = false
     sleep(2)
+  end
+
+  def declare_current_player
+    puts "It's #{@current_player.name}'s turn! (#{@current_player.color})"
+  end
+
+  def declare_check_status
+    if @board.in_check?(@current_player)
+      puts "#{other_player.name} has forced you into a check!"
+    end
+  end
+
+  def declare_selected_piece
+    puts "you have selected the #{@board[@board.start_pos].type}!"
   end
 
   def valid_start_pos?(pos)
@@ -63,13 +105,17 @@ class Game
     end_pos = nil
 
     until valid_end_pos?(end_pos)
-      puts "choose where you would like to move your #{@board[@board.start_pos].type}, #{@current_player.name}."
+      give_end_move_prompt
       end_pos = @current_player.get_move(@display)
       @display.render
     end
 
     @board.start_pos = nil
     end_pos
+  end
+
+  def give_end_move_prompt
+    puts "choose where you would like to move your #{@board[@board.start_pos].type}, #{@current_player.name}."
   end
 
   def valid_end_pos?(pos)
@@ -89,34 +135,6 @@ class Game
     sleep(2)
 
     @capture = nil
-  end
-
-  def give_greeting
-    puts "Welcome to Chess!"
-    puts "Type '1' for a human vs. human game, '2' for human vs. computer, or '3' to watch 2 computers duke it out! Then hit enter:"
-  end
-
-  def choose_players
-    give_greeting
-
-    player_choice = gets.chomp.to_i
-    case player_choice
-      when 1
-        print 'type a name for player1:   '
-        player1_name = gets.chomp
-        print 'type a name for player2:   '
-        player2_name = gets.chomp
-        @player1 = HumanPlayer.new(player1_name, :black)
-        @player2 = HumanPlayer.new(player2_name, :white)
-      when 2
-        print 'type your name:   '
-        player_name = gets.chomp
-        @player1 = HumanPlayer.new(player_name, :black)
-        @player2 = ComputerPlayer.new('Cathy the Computer', :white)
-      when 3
-        @player1 = ComputerPlayer.new('MacBook Miller', :black)
-        @player2 = ComputerPlayer.new('PC Jones', :white)
-    end
   end
 
   def switch_players

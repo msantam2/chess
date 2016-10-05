@@ -14,9 +14,9 @@ class ComputerPlayer < Player
   def select_start_pos(board)
     sleep(1)
     if board.in_check?(self)
-      puts "you are in a state of check!"
-    end
       # move out of check
+      
+    end
       # will not move INTO check/checkmate
     # elsif can induce check/checkmate
       # moves to force opponent into check/checkmate

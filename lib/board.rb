@@ -96,11 +96,14 @@ class Board
     piece.color == player_color && !piece.moves(self, pos).empty?
   end
 
-  def in_check?(player)
+  def in_check?(current_player)
+    king_pos = king_pos(current_player)
+    opponent_moves(current_player).include?(king_pos)
+  end
+
+  def in_checkmate?(player)
     king_pos = king_pos(player)
-    opponent = opponent(player)
-    opponent_pieces = opponent_pieces(opponent)
-    opponent_moves(opponent_pieces).include?(king_pos)
+    
   end
 
   def opponent(current_player)
@@ -122,13 +125,14 @@ class Board
     pieces_with_positions
   end
 
-  def opponent_moves(opponent_pieces)
-    moves = []
+  def opponent_moves(current_player)
+    opponent = opponent(current_player)
+    opponent_pieces = opponent_pieces(opponent)
 
+    moves = []
     opponent_pieces.each do |piece, pos|
       moves += piece.moves(self, pos)
     end
-
     moves
   end
 
@@ -156,7 +160,7 @@ class Board
     self[start_pos] = NullPiece.instance
     self[end_pos] = piece
 
-    # returning this value to Game#move_piece in order to annouce what piece has been captured 
+    # returning this value to Game#move_piece in order to annouce what piece has been captured
     end_piece
   end
 
