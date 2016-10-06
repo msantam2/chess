@@ -107,4 +107,4 @@ end
 ```
 The ```game``` checks its ```@board``` immediately after the game has switched players to see if the current player's king remains (if it does not, it has been captured by the previous player and the game is over)
 
-### AI (Deep Dup)
+### Computer AI

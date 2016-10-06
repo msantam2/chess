@@ -15,19 +15,19 @@ module Slideable
 
     move_directions.each do |move_direction|
       delta = DIRECTION_DELTAS[move_direction]
-      new_pos = [start_pos[0] + delta[0], start_pos[1] + delta[1]]
+      end_pos = [start_pos[0] + delta[0], start_pos[1] + delta[1]]
 
-      while valid_move?(board, new_pos)
-        all_moves << new_pos
-        break if board.space_occupied_by_opponent?(self, new_pos)
-        new_pos = [new_pos[0] + delta[0], new_pos[1] + delta[1]]
+      while valid_move?(board, end_pos)
+        all_moves << end_pos
+        break if board.space_occupied_by_opponent?(self, end_pos)
+        end_pos = [end_pos[0] + delta[0], end_pos[1] + delta[1]]
       end
     end
 
     all_moves
   end
 
-  def valid_move?(board, new_pos)
-    board.in_bounds?(new_pos) && board.space_available?(self, new_pos)
+  def valid_move?(board, end_pos)
+    board.in_bounds?(end_pos) && board.space_available?(self, end_pos)
   end
 end

@@ -59,16 +59,16 @@ class Board
     pos.all? { |coord| coord.between?(0, 7)}
   end
 
-  def space_available?(current_piece, new_pos)
-    space_empty?(new_pos) || space_occupied_by_opponent?(current_piece, new_pos)
+  def space_available?(current_piece, end_pos)
+    space_empty?(end_pos) || space_occupied_by_opponent?(current_piece, end_pos)
   end
 
   def space_empty?(pos)
     self[pos].type == :nullpiece
   end
 
-  def space_occupied_by_opponent?(current_piece, new_pos)
-    other_piece = self[new_pos]
+  def space_occupied_by_opponent?(current_piece, end_pos)
+    other_piece = self[end_pos]
     (current_piece.color == :black && other_piece.color == :white) ||
     (current_piece.color == :white && other_piece.color == :black)
   end
@@ -89,51 +89,54 @@ class Board
     (start_pos[0] - end_pos[0]).abs == 1 && (start_pos[1] - end_pos[1]).abs == 0 && self.space_empty?(end_pos)
   end
 
-  def valid_start_pos?(pos, player_color)
+  def valid_start_pos?(pos, player)
     # pos may be nil because of cursorable.rb:47, moving will return nil
     return false if pos.nil?
     piece = self[pos]
-    piece.color == player_color && !piece.moves(self, pos).empty?
+    piece.color == player.color && !piece.moves(self, pos).empty?
   end
 
-  def in_check?(current_player)
-    king_pos = king_pos(current_player)
-    opponent_moves(current_player).include?(king_pos)
+  def in_check?(player)
+    king_pos = king_pos(player)
+    opponent_moves(player).include?(king_pos)
   end
 
   def in_checkmate?(player)
-    king_pos = king_pos(player)
-    
+    # you already know you are in check, so current king_pos is in check already. look at all of player's possible moves and see if all of them keep him in a state of check
   end
 
-  def opponent(current_player)
-    current_player.color == :black ? :white : :black
-  end
-
-  def opponent_pieces(opponent)
-    pieces_with_positions = {}
-
-    @grid.each_with_index.each do |row, row_idx|
-      row.each_index.each do |col_idx|
-        pos = [row_idx, col_idx]
-        if self[pos].color == opponent
-          pieces_with_positions[self[pos]] = pos
-        end
-      end
-    end
-
-    pieces_with_positions
-  end
-
-  def opponent_moves(current_player)
-    opponent = opponent(current_player)
-    opponent_pieces = opponent_pieces(opponent)
+  def opponent_moves(player)
+    opponent_color = opponent_color(player)
+    opponent_pieces = player_pieces(opponent_color)
 
     moves = []
     opponent_pieces.each do |piece, pos|
       moves += piece.moves(self, pos)
     end
     moves
+  end
+
+  def opponent_color(player)
+    player.color == :black ? :white : :black
+  end
+
+  def player_pieces(player_color)
+    pieces_with_positions = {}
+
+    @grid.each_with_index.each do |row, row_idx|
+      row.each_index.each do |col_idx|
+        pos = [row_idx, col_idx]
+        if self[pos].color == player_color
+          pieces_with_positions[self[pos]] = pos
+        end
+      end
+    end
+    # pieces_with_positions looks like the following:
+    # {<KingObject>: [3, 4], <KnightObject>: [0, 4],
+    #  <PawnObject>: [2, 6]}. All keys are pieces that
+    # belong to 'player_color' and they point to their
+    # current position on the board
+    pieces_with_positions
   end
 
   def king_pos(player)

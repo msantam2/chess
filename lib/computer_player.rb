@@ -14,8 +14,14 @@ class ComputerPlayer < Player
   def select_start_pos(board)
     sleep(1)
     if board.in_check?(self)
-      # move out of check
-      
+      # check to see if comp is strictly in check OR is, in fact, in checkmate. If comp is not in check, they cannot be in checkmate. This way, there is not an expensive check on each turn for checkmate status. Checkmate is only checked if the player is in check. This is the reason for this nested conditional.
+      if board.in_checkmate?(self)
+        #make random move
+
+      else # still only in check, not checkmate
+        # move out of check
+
+      end
     end
       # will not move INTO check/checkmate
     # elsif can induce check/checkmate

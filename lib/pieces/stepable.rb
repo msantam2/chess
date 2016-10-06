@@ -14,24 +14,24 @@ module Stepable
     all_moves = []
 
     move_directions.each do |move_direction|
-      new_pos = start_pos.dup
+      end_pos = start_pos.dup
       if move_direction.is_a?(Array)
         move_direction.each do |move_dir|
           current_delta = DIRECTION_DELTAS[move_dir]
-          new_pos[0] += current_delta[0]; new_pos[1] += current_delta[1]
+          end_pos[0] += current_delta[0]; end_pos[1] += current_delta[1]
         end
       else
         delta = DIRECTION_DELTAS[move_direction]
-        new_pos[0] += delta[0]; new_pos[1] += delta[1]
+        end_pos[0] += delta[0]; end_pos[1] += delta[1]
       end
 
-      all_moves << new_pos if valid_move?(board, new_pos)
+      all_moves << end_pos if valid_move?(board, end_pos)
     end
-
+    # pawn_moves filters all_moves based off its unique behavior (only moves diagonally when capturing, moves 2 spaces only on first move). see pawn_moves in pawn.rb
     self.type == :pawn ? pawn_moves(start_pos, board, all_moves) : all_moves
   end
 
-  def valid_move?(board, new_pos)
-    board.in_bounds?(new_pos) && board.space_available?(self, new_pos)
+  def valid_move?(board, end_pos)
+    board.in_bounds?(end_pos) && board.space_available?(self, end_pos)
   end
 end

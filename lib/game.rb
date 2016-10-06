@@ -98,7 +98,7 @@ class Game
   end
 
   def valid_start_pos?(pos)
-    @board.valid_start_pos?(pos, @current_player.color)
+    @board.valid_start_pos?(pos, @current_player)
   end
 
   def get_end_pos
