@@ -37,7 +37,7 @@ class ComputerPlayer < Player
     board.grid.each_with_index do |row, row_idx|
       row.each_index do |col_idx|
         current_pos = [row_idx, col_idx]
-        if board.valid_start_pos?(current_pos, self.color)
+        if board.valid_start_pos?(current_pos, self)
           possible_positions << current_pos
         end
       end

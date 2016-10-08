@@ -33,6 +33,8 @@ class Game
       when 3
         @player1 = ComputerPlayer.new('MacBook Miller', :black)
         @player2 = ComputerPlayer.new('PC Jones', :white)
+        # when comp vs comp, no cursor navigation needed
+        @display.cursor_pos = nil
     end
   end
 
@@ -88,8 +90,10 @@ class Game
   end
 
   def declare_check_status
-    if @board.in_check?(@current_player)
-      puts "#{other_player.name} has forced you into a check!"
+    if @board.in_checkmate?(@current_player)
+      puts "#{other_player.name} has forced you into a checkmate! Unfortunately you will soon lose."
+    elsif @board.in_check?(@current_player)
+      puts "#{other_player.name} has forced you into a check! Keep fighting!"
     end
   end
 

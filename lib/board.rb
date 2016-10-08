@@ -1,4 +1,5 @@
 require 'require_all'
+require 'deep_clone'
 require_all 'pieces'
 
 class Board
@@ -97,33 +98,64 @@ class Board
   end
 
   def in_check?(player)
-    king_pos = king_pos(player)
-    opponent_moves(player).include?(king_pos)
+    king_pos = king_pos(player.color)
+    opponent = opponent_color(player.color)
+    player_moves(opponent).values.flatten(1).include?(king_pos)
+    # player_moves returns a hash of the following
+    # structure (key = start_pos, value = all
+    # possible end positions)...which piece it
+    # is does not matter:
+    # {[1, 2] => [[1, 4], [2, 3]],
+    #  [3, 7] => [[3, 8], [4, 6]]}
+    # when calling .values,
+    # [[[1, 4], [2, 3]], [[3, 8], [4, 6]]] is returned
+    # we need flatten once with flatten(1) in order
+    # to check if the king_pos is included
   end
 
   def in_checkmate?(player)
     # you already know you are in check, so current king_pos is in check already. look at all of player's possible moves and see if all of them keep him in a state of check
+    current_player_moves = player_moves(player.color)
+    # start_pos = [4, 5]
+    # end_positions = [[4, 6], [5, 5]]
+    # ^ end_positions represents all the moves that can
+    # be made FROM the start_pos
+    current_player_moves.each do |start_pos, end_positions|
+      end_positions.each do |end_pos|
+        new_board = DeepClone.clone(self)
+        new_board.move_piece(start_pos, end_pos)
+        return false if !new_board.in_check?(player)
+      end
+    end
+
+    true
   end
 
-  def opponent_moves(player)
-    opponent_color = opponent_color(player)
-    opponent_pieces = player_pieces(opponent_color)
+  def opponent_color(player_color)
+    player_color == :black ? :white : :black
+  end
 
-    moves = []
-    opponent_pieces.each do |piece, pos|
-      moves += piece.moves(self, pos)
+  def player_moves(player_color)
+    player_pieces = player_pieces(player_color)
+
+    moves = {}
+    player_pieces.each do |piece, pos|
+      moves[pos] = piece.moves(self, pos)
     end
     moves
-  end
-
-  def opponent_color(player)
-    player.color == :black ? :white : :black
+    # moves is a hash, where the key is the start_pos
+    # and the value is all the moves that can be made
+    # from that start_pos.
+    # the reason for this structure is mainly for
+    # #in_checkmate? the board must make the move
+    # from the start_pos to each end_pos and
+    # evaluate if player is still in check
   end
 
   def player_pieces(player_color)
     pieces_with_positions = {}
 
-    @grid.each_with_index.each do |row, row_idx|
+    @grid.each_with_index do |row, row_idx|
       row.each_index.each do |col_idx|
         pos = [row_idx, col_idx]
         if self[pos].color == player_color
@@ -139,11 +171,11 @@ class Board
     pieces_with_positions
   end
 
-  def king_pos(player)
+  def king_pos(player_color)
     @grid.each_with_index do |row, row_idx|
       row.each_index do |col_idx|
         pos = [row_idx, col_idx]
-        if self[pos].type == :king && self[pos].color == player.color
+        if self[pos].type == :king && self[pos].color == player_color
           return pos
         end
       end

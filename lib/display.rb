@@ -14,7 +14,9 @@ class Display
     nullpiece: '   '
   }
 
-  attr_reader :board, :cursor_pos, :selected
+  attr_reader :board, :selected
+  attr_accessor :cursor_pos
+  
   def initialize(board)
     @board = board
     @cursor_pos = [0, 0]
