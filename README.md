@@ -108,3 +108,9 @@ end
 The ```game``` checks its ```@board``` immediately after the game has switched players to see if the current player's king remains (if it does not, it has been captured by the previous player and the game is over)
 
 ### Computer AI
+
+(Used ruby_deep_clone gem - add snippet below - to deep dup the board in order to assess checkmate)
+
+### To-Do
+
+- Enable Castling and En Passant functionality into the game

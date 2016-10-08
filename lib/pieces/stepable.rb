@@ -27,7 +27,10 @@ module Stepable
 
       all_moves << end_pos if valid_move?(board, end_pos)
     end
-    # pawn_moves filters all_moves based off its unique behavior (only moves diagonally when capturing, moves 2 spaces only on first move). see pawn_moves in pawn.rb
+    # since the pawn has quite unique behavior, it must have its own
+    # #pawn_moves method, which is the reason for the ternary below.
+    # if the piece is a pawn, defer to #pawn_moves (in ./pawn.rb),
+    # otherwise, return all_moves.
     self.type == :pawn ? pawn_moves(start_pos, board, all_moves) : all_moves
   end
 

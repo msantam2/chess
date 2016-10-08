@@ -74,20 +74,35 @@ class Board
     (current_piece.color == :white && other_piece.color == :black)
   end
 
-  # to check for valid pawn move
+  # to check for valid pawn move:
+  # remember, a pawn can only move up diagonally one space if
+  # it is capturing an opponent. This method #diagonal?
+  # checks if the potential end space is indeed one move up and
+  # diagonal, and is occupied by an opponent, i.e.
+  # (diagonal space? && there is an opponent there).
   def diagonal?(start_pos, end_pos)
     ((start_pos[0] - end_pos[0]).abs == 1) && ((start_pos[1] - end_pos[1]).abs == 1) && self.space_occupied_by_opponent?(self[start_pos], end_pos)
   end
 
   # to check for valid pawn move
+  # one_ahead? checks if the potential end_pos is indeed
+  # one space forward from the pawn and if it is empty.
+  def one_ahead?(start_pos, end_pos)
+    (start_pos[0] - end_pos[0]).abs == 1 && (start_pos[1] - end_pos[1]).abs == 0 && self.space_empty?(end_pos)
+  end
+
+  # to check for valid pawn move:
+  # #two_ahead? is called if the pawn is on its first move,
+  # and according to the rules of chess can move either one OR
+  # two moves forward (only if both are empty, i.e. it cannot
+  # move 2 spaces by jumping over 1). #two_ahead? checks three
+  # things:
+  # the potential end_pos is indeed 2 spaces forward &&
+  # this space 2 forward is empty && the space 1 forward is also
+  # empty.
   def two_ahead?(start_pos, end_pos)
     one_space_ahead = [((start_pos[0] + end_pos[0]) / 2), start_pos[1]]
     (start_pos[0] - end_pos[0]).abs == 2 && self.space_empty?(end_pos) && self.space_empty?(one_space_ahead)
-  end
-
-  # to check for valid pawn move
-  def one_ahead?(start_pos, end_pos)
-    (start_pos[0] - end_pos[0]).abs == 1 && (start_pos[1] - end_pos[1]).abs == 0 && self.space_empty?(end_pos)
   end
 
   def valid_start_pos?(pos, player)
