@@ -9,4 +9,8 @@ class NullPiece
     @type = :nullpiece
     @color = nil
   end
+
+  def moves(board, start_pos)
+    []
+  end
 end

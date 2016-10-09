@@ -39,15 +39,15 @@ class Game
   end
 
   def play
-    until game_won || stalemate
-      @display.render
+    until game_won
+      @display.render(@current_player)
       declare_first_player if @first_move
       declare_capture if @capture
       play_turn
       switch_players
     end
 
-    game_won ? declare_winner : declare_stalemate
+    declare_winner
   end
 
   def play_turn
@@ -65,7 +65,7 @@ class Game
 
       # board ivar 'start_pos' for display to render green background when the piece has been selected
       @board.start_pos = start_pos
-      @display.render
+      @display.render(@current_player)
     end
 
     declare_selected_piece
@@ -106,7 +106,7 @@ class Game
     until valid_end_pos?(end_pos)
       give_end_move_prompt
       end_pos = @current_player.get_move(@display)
-      @display.render
+      @display.render(@current_player)
     end
 
     @board.start_pos = nil
@@ -154,24 +154,11 @@ class Game
     end
   end
 
-  def stalemate
-    pieces = @board.flatten.reject do |piece|
-      piece.type == :nullpiece
-    end
-    pieces.length == 2 && pieces.all? do |piece|
-      piece.type == :king
-    end
-  end
-
   def declare_winner
-    @display.render
+    @display.render(@current_player)
     puts "#{other_player.name} has won the game! Would you like to play again? (y or n)"
     answer = gets.chomp
     answer == 'y' ? Game.new.play : nil
-  end
-
-  def declare_stalemate
-    puts "This game has ended in a stalemate!"
   end
 end
 

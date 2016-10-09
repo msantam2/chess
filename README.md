@@ -24,7 +24,8 @@ __________
 
 - For all human players (robots excluded!) simply use the arrows on your keyboard to navigate the board. Once you are hovering over the piece you would like to move, press ```Enter```. Next, navigate to the space you would like to move to and press ```Enter```. If no valid moves exist for a certain piece, it cannot be selected. Be careful, once a piece is selected it cannot be de-selected!
 
-- The cursor is represented by a yellow background when navigating, and a selected piece with a green background.
+- The cursor is represented by a blue background when navigating, and a selected piece with a green background. When hovering over one of your
+own pieces (or when one is selected), the possible moves are highlighted in yellow.
 
 - To quit a game, press ```ctrl-C```.
 
@@ -89,8 +90,12 @@ When a piece is successfully captured, the NullPiece is set in its place:
 ```rb
 def move_piece(start_pos, end_pos)
   piece = self[start_pos]
+  end_piece = self[end_pos]
+
   self[start_pos] = NullPiece.instance
   self[end_pos] = piece
+
+  end_piece
 end
 ```
 
@@ -109,10 +114,21 @@ The ```game``` checks its ```@board``` immediately after the game has switched p
 
 ### Computer AI
 
-(Used ruby_deep_clone gem - add snippet below - to deep dup the board in order to assess checkmate)
-(look at AM README for table markup but make the table you wrote down to illustrate flow chart of decisions for computer AI - start with something like 'as you can find in computer_player.rb')
+- Used ```ruby_deep_clone``` gem to deep duplicate the board in order to evaluate potential check/checkmate states.
+```rb
+new_board = DeepClone.clone(board)
+```
+
+| Steps         | Checkmate     | Check         | Neither       |
+| ------------- | ------------- | ------------- | ------------- |
+| 1             | Select a random move - the computer knows it has already lost! | First things first: find moves that escape check. | The AI is not constrained by check/mate, but still must select from moves that avoid check/mate. |
+| 2             |  | Filter these moves by seeing if any can force the opponent into check/mate. If AI can induce checkmate, this move is immediately chosen. If check, this move is a candidate for final choice. | Filter these moves by seeing if any can force the opponent into check/mate. If AI can induce checkmate, this move is immediately chosen. If check, this move is a candidate for final choice. |
+| 3             | | Further filter the moves that are still available by seeing which can capture an opponent's piece. Finally, the move that captures the highest value piece is returned. | Further filter the moves that are still available by seeing which can capture an opponent's piece. Finally, the move that captures the highest value piece is returned. |
+
+(the implemention of the above structure can be found in ```computer_player.rb```)
 
 ### To-Do
 
 - Incorporate Castling and En Passant functionality into the game
 - Even smarter AI! For example, the AI currently protects its King against check/checkmate, but it does not protect its other valuable pieces. Have the AI refuse to swap, say, its queen with the opponent's pawn. In sum, build the AI to analyze more consequences of a move rather than making any capture it can.
+- Account for a stalemate (see https://en.wikipedia.org/wiki/Stalemate). If AI is the victim of a stalemate (in pseudo-checkmate status - see first image in wikipedia link) it should know it will lose and select a random move.
