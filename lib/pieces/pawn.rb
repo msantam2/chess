@@ -18,16 +18,16 @@ class Pawn < Piece
 
   # #pawn_moves filters down the possible pawn moves based off the
   # current board and whether or not it is the pawn's first move
-  def pawn_moves(start_pos, board, moves)
-    filtered_moves = []
+  def pawn_moves_filter(start_pos, board, moves)
+    pawn_moves = []
 
     moves.each do |move|
       if valid_pawn_move?(start_pos, board, move)
-        filtered_moves << move
+        pawn_moves << move
       end
     end
 
-    filtered_moves
+    pawn_moves
   end
 
   # #valid_pawn_move? checks for 3 conditions to see if a pawn move is

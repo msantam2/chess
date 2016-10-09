@@ -31,7 +31,7 @@ module Stepable
     # #pawn_moves method, which is the reason for the ternary below.
     # if the piece is a pawn, defer to #pawn_moves (in ./pawn.rb),
     # otherwise, return all_moves.
-    self.type == :pawn ? pawn_moves(start_pos, board, all_moves) : all_moves
+    self.type == :pawn ? pawn_moves_filter(start_pos, board, all_moves) : all_moves
   end
 
   def valid_move?(board, end_pos)

@@ -30,21 +30,16 @@ class Game
         player_name = gets.chomp
         @player1 = HumanPlayer.new(player_name, :black)
         @player2 = ComputerPlayer.new('Compie', :white)
-      when 3
-        @player1 = ComputerPlayer.new('MacBook Miller', :black)
-        @player2 = ComputerPlayer.new('PC Jones', :white)
-        # when comp vs comp, no cursor navigation needed
-        @display.cursor_pos = nil
     end
   end
 
   def give_greeting
     puts "Welcome to Chess!"
-    puts "Type '1' for a human vs. human game, '2' for human vs. computer, or '3' to watch 2 computers duke it out! Then hit enter:"
+    puts "Type '1' for a human vs. human game or '2' for human vs. computer! Then hit enter:"
   end
 
   def play
-    until game_won
+    until game_won || stalemate
       @display.render
       declare_first_player if @first_move
       declare_capture if @capture
@@ -52,7 +47,7 @@ class Game
       switch_players
     end
 
-    declare_winner
+    game_won ? declare_winner : declare_stalemate
   end
 
   def play_turn
@@ -159,11 +154,24 @@ class Game
     end
   end
 
+  def stalemate
+    pieces = @board.flatten.reject do |piece|
+      piece.type == :nullpiece
+    end
+    pieces.length == 2 && pieces.all? do |piece|
+      piece.type == :king
+    end
+  end
+
   def declare_winner
     @display.render
     puts "#{other_player.name} has won the game! Would you like to play again? (y or n)"
     answer = gets.chomp
     answer == 'y' ? Game.new.play : nil
+  end
+
+  def declare_stalemate
+    puts "This game has ended in a stalemate!"
   end
 end
 

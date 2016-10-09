@@ -139,7 +139,7 @@ class Board
       end_positions.each do |end_pos|
         new_board = DeepClone.clone(self)
         new_board.move_piece(start_pos, end_pos)
-        return false if !new_board.in_check?(player_color)
+        return false unless new_board.in_check?(player_color)
       end
     end
 
