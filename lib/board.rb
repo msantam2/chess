@@ -105,16 +105,16 @@ class Board
     (start_pos[0] - end_pos[0]).abs == 2 && self.space_empty?(end_pos) && self.space_empty?(one_space_ahead)
   end
 
-  def valid_start_pos?(pos, player)
+  def valid_start_pos?(pos, player_color)
     # pos may be nil because of cursorable.rb:47, moving will return nil
     return false if pos.nil?
     piece = self[pos]
-    piece.color == player.color && !piece.moves(self, pos).empty?
+    piece.color == player_color && !piece.moves(self, pos).empty?
   end
 
-  def in_check?(player)
-    king_pos = king_pos(player.color)
-    opponent = opponent_color(player.color)
+  def in_check?(player_color)
+    king_pos = king_pos(player_color)
+    opponent = opponent_color(player_color)
     player_moves(opponent).values.flatten(1).include?(king_pos)
     # player_moves returns a hash of the following
     # structure (key = start_pos, value = all
@@ -128,9 +128,9 @@ class Board
     # to check if the king_pos is included
   end
 
-  def in_checkmate?(player)
+  def in_checkmate?(player_color)
     # you already know you are in check, so current king_pos is in check already. look at all of player's possible moves and see if all of them keep him in a state of check
-    current_player_moves = player_moves(player.color)
+    current_player_moves = player_moves(player_color)
     # start_pos = [4, 5]
     # end_positions = [[4, 6], [5, 5]]
     # ^ end_positions represents all the moves that can
@@ -139,7 +139,7 @@ class Board
       end_positions.each do |end_pos|
         new_board = DeepClone.clone(self)
         new_board.move_piece(start_pos, end_pos)
-        return false if !new_board.in_check?(player)
+        return false if !new_board.in_check?(player_color)
       end
     end
 

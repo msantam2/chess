@@ -90,9 +90,9 @@ class Game
   end
 
   def declare_check_status
-    if @board.in_checkmate?(@current_player)
+    if @board.in_checkmate?(@current_player.color)
       puts "#{other_player.name} has forced you into a checkmate! Unfortunately you will soon lose."
-    elsif @board.in_check?(@current_player)
+    elsif @board.in_check?(@current_player.color)
       puts "#{other_player.name} has forced you into a check! Keep fighting!"
     end
   end
@@ -102,7 +102,7 @@ class Game
   end
 
   def valid_start_pos?(pos)
-    @board.valid_start_pos?(pos, @current_player)
+    @board.valid_start_pos?(pos, @current_player.color)
   end
 
   def get_end_pos
