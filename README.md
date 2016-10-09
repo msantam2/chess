@@ -110,6 +110,7 @@ The ```game``` checks its ```@board``` immediately after the game has switched p
 ### Computer AI
 
 (Used ruby_deep_clone gem - add snippet below - to deep dup the board in order to assess checkmate)
+(look at AM README for table markup but make the table you wrote down to illustrate flow chart of decisions for computer AI - start with something like 'as you can find in computer_player.rb')
 
 ### To-Do
 

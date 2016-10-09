@@ -84,7 +84,7 @@ class Board
     ((start_pos[0] - end_pos[0]).abs == 1) && ((start_pos[1] - end_pos[1]).abs == 1) && self.space_occupied_by_opponent?(self[start_pos], end_pos)
   end
 
-  # to check for valid pawn move
+  # to check for valid pawn move:
   # one_ahead? checks if the potential end_pos is indeed
   # one space forward from the pawn and if it is empty.
   def one_ahead?(start_pos, end_pos)

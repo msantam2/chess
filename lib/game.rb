@@ -98,7 +98,7 @@ class Game
   end
 
   def declare_selected_piece
-    puts "you have selected the #{@board[@board.start_pos].type}!"
+    puts "you have selected the #{current_piece.type}!"
   end
 
   def valid_start_pos?(pos)
@@ -119,7 +119,7 @@ class Game
   end
 
   def give_end_move_prompt
-    puts "choose where you would like to move your #{@board[@board.start_pos].type}, #{@current_player.name}."
+    puts "choose where you would like to move your #{current_piece.type}, #{@current_player.name}."
   end
 
   def valid_end_pos?(pos)
@@ -147,6 +147,10 @@ class Game
 
   def other_player
     @current_player == @player1 ? @player2 : @player1
+  end
+
+  def current_piece
+    @board[@board.start_pos]
   end
 
   def game_won
