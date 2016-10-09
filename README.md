@@ -2,7 +2,7 @@
 
 Enjoy a fun and elegant way to play chess directly from the comfort of your own terminal! Play your friend or duke it out against the computer!
 
-<img src="https://github.com/msantam2/chess/blob/master/images/chess_gameplay.gif" width="555" height="520" />
+<img src="https://github.com/msantam2/chess/blob/master/images/chess_gameplay.gif" width="800" height="460" />
 
 __________
 
@@ -114,7 +114,7 @@ The ```game``` checks its ```@board``` immediately after the game has switched p
 
 ### Computer AI
 
-- Used ```ruby_deep_clone``` gem to deep duplicate the board in order to evaluate potential check/checkmate states.
+- Used ```ruby_deep_clone``` gem (which deep duplicates instance objects) to clone the board object, allowing for the evaluation of potential check/mate states.
 ```rb
 new_board = DeepClone.clone(board)
 ```
@@ -130,5 +130,5 @@ new_board = DeepClone.clone(board)
 ### To-Do
 
 - Incorporate Castling and En Passant functionality into the game
-- Even smarter AI! For example, the AI currently protects its King against check/checkmate, but it does not protect its other valuable pieces. Have the AI refuse to swap, say, its queen with the opponent's pawn. In sum, build the AI to analyze more consequences of a move rather than making any capture it can.
+- Even smarter AI! For example, the AI currently protects its King against check/mate, but it does not protect its other valuable pieces. Have the AI refuse to swap, say, its queen with the opponent's pawn. In sum, build the AI to analyze more consequences of a move rather than making any capture it can.
 - Account for a stalemate (see https://en.wikipedia.org/wiki/Stalemate). If AI is the victim of a stalemate (in pseudo-checkmate status - see first image in wikipedia link) it should know it will lose and select a random move.
